@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Yawn. — pop your ears on the plane</title>
+  <meta name="description" content="Trigger a yawn to pop your ears during flights and altitude changes. Uses mirror neurons and contagious yawning videos to relieve ear pressure naturally.">
+  <meta name="keywords" content="how to pop ears on plane, yawning videos to unclog ears, yawn trigger airplane pressure, ear pressure relief, contagious yawning, mirror neurons yawn">
+  <link rel="canonical" href="https://yawn.app/">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Yawn. — pop your ears on the plane">
+  <meta property="og:description" content="Watch yawning videos to trigger a yawn and relieve ear pressure naturally during flights.">
+  <meta property="og:type" content="website">
+
+  <!-- AdSense — replace ca-pub-XXXXXXXXXXXXXXXXX with your publisher ID -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- Entry Screen -->
+<div id="screen-entry" class="screen active">
+  <div class="entry-content">
+    <h1 class="app-title">Yawn.</h1>
+    <p class="app-subtitle" data-i18n="subtitle">pop your ears · relax · just breathe</p>
+    <div class="lang-selector-wrap">
+      <select id="lang-select" aria-label="Select language"></select>
+    </div>
+    <button id="btn-go" class="btn-go" data-i18n="btnGo">Go!</button>
+  </div>
+</div>
+
+<!-- Player Screen -->
+<div id="screen-player" class="screen">
+
+  <!-- Top banner ad -->
+  <div id="banner-ad-container">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"></ins>
+  </div>
+
+  <!-- Player area -->
+  <div id="player-area">
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+
+    <div id="player-wrapper">
+      <video id="video-player" playsinline muted autoplay></video>
+      <button id="btn-prev" class="nav-btn nav-prev" aria-label="Previous video">&#8592;</button>
+      <button id="btn-next" class="nav-btn nav-next" aria-label="Next video">&#8594;</button>
+    </div>
+  </div>
+
+  <!-- Mode tabs -->
+  <div id="mode-tabs">
+    <button class="mode-tab active" data-mode="humans" id="tab-humans"><span data-i18n="tabHumans">Humans</span></button>
+    <button class="mode-tab" data-mode="animals" id="tab-animals"><span class="lock-icon">🔒</span><span data-i18n="tabAnimals"> Animals</span></button>
+  </div>
+
+  <!-- SEO content -->
+  <section id="seo-section">
+    <h2>How to pop your ears on a plane</h2>
+    <p>Yawning is one of the most effective ways to equalize ear pressure during flights and altitude changes. <strong>Yawn.</strong> uses carefully selected yawning videos to trigger the yawn reflex through mirror neurons — the same brain mechanism that makes you yawn when you see someone else yawn.</p>
+
+    <h3>Why watching yawning makes you yawn</h3>
+    <p>Mirror neurons in your brain activate when you observe actions performed by others. Yawning is one of the most contagious human behaviors — seeing, hearing, or even reading about yawning is enough to trigger the same response. This cross-species empathy even works with animals yawning, which is why our Animals mode includes a variety of species to deepen the stimulus.</p>
+
+    <h3>How it relieves ear pressure</h3>
+    <p>When you yawn, the Eustachian tube opens briefly, allowing air to flow between the middle ear and the back of your throat. This equalizes the pressure difference that causes that uncomfortable plugged feeling during takeoff, landing, and rapid altitude changes.</p>
+
+    <p class="seo-tags">
+      how to pop ears on plane · yawning videos to unclog ears · yawn trigger airplane pressure · ear pressure relief flight · contagious yawning videos · mirror neurons yawning · eustachian tube exercise · how to yawn on command
+    </p>
+  </section>
+</div>
+
+<!-- Unlock Modal -->
+<div id="modal-unlock" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <button id="modal-close" class="modal-close" aria-label="Close">&#10005;</button>
+    <h2 class="modal-title" id="modal-title" data-i18n="modalTitle">Unlock more yawns</h2>
+    <p class="modal-subtitle" data-i18n="modalSubtitle">Watch a short ad to unlock Animals — permanently on this device.</p>
+    <div class="modal-buttons">
+      <button id="btn-unlock-animals" class="btn-unlock btn-unlock-animals">
+        <span class="unlock-icon">🐾</span>
+        <span class="unlock-label" data-i18n="unlockAnimalsLabel">Animals</span>
+        <span class="unlock-desc" data-i18n="unlockAnimalsDesc">Cross-species empathy boost</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Ad Overlay -->
+<div id="ad-overlay" class="hidden" role="dialog" aria-modal="true">
+  <div id="ad-inner">
+    <p id="ad-mode-label"></p>
+    <div id="adsense-rewarded-container">
+      <ins id="adsense-rewarded"
+           class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"
+           data-ad-format="fluid"></ins>
+    </div>
+    <div id="ad-fallback">
+      <div id="countdown-ring">
+        <svg viewBox="0 0 80 80" id="countdown-svg">
+          <circle cx="40" cy="40" r="34" class="ring-track"/>
+          <circle cx="40" cy="40" r="34" class="ring-fill" id="ring-fill"/>
+        </svg>
+        <span id="countdown-number">5</span>
+      </div>
+      <p class="ad-hint" data-i18n="adHint">Unlocking Animals…</p>
+      <button id="btn-continue" class="btn-continue hidden" data-i18n="btnContinue">Continue ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Consent Banner -->
+<div id="cookie-banner" class="hidden" role="region" aria-label="Cookie consent">
+  <div class="cookie-content">
+    <p id="cookie-text">We use cookies and ads to keep Yawn. free. <a href="/privacy-policy.html" target="_blank">Privacy Policy</a></p>
+    <div class="cookie-buttons">
+      <button id="btn-cookie-decline" class="btn-cookie btn-cookie-decline" data-i18n="cookieDecline">Decline</button>
+      <button id="btn-cookie-accept" class="btn-cookie btn-cookie-accept" data-i18n="cookieAccept">Accept</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
