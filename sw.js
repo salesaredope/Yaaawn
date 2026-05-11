@@ -2,11 +2,11 @@ const CACHE_NAME = 'yawn-v1';
 
 // App shell — cached on install
 const SHELL_ASSETS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/manifest.json',
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.json',
 ];
 
 // ─── Install: cache app shell ─────────────────────────────────────────────────
@@ -35,7 +35,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
 
   // Videos: network-first, no caching (too large)
-  if (url.pathname.startsWith('/videos/')) {
+  if (url.pathname.includes('/videos/')) {
     event.respondWith(fetch(request).catch(() => new Response('', { status: 503 })));
     return;
   }

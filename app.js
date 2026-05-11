@@ -292,7 +292,7 @@ function applyTranslations(lang) {
 
   const cookieTextEl = document.getElementById('cookie-text');
   if (cookieTextEl) {
-    cookieTextEl.innerHTML = `${t.cookieText} <a href="/privacy-policy.html" target="_blank">${t.privacyPolicy}</a>`;
+    cookieTextEl.innerHTML = `${t.cookieText} <a href="privacy-policy.html" target="_blank">${t.privacyPolicy}</a>`;
   }
 
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -593,7 +593,7 @@ function init() {
   bindEvents();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 }
 
