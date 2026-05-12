@@ -20,14 +20,7 @@ html, body {
   justify-content: center;
 }
 
-#screen-player {
-  height: 100svh;
-  overflow: hidden;
-}
-
-@supports not (height: 100svh) {
-  #screen-player { height: 100vh; }
-}
+#screen-player { min-height: 100vh; }
 
 /* ─── Dot zoom transition ───────────────────────────────────────────────────── */
 #title-dot {
@@ -178,10 +171,14 @@ html, body {
 /* ─── Player Area ───────────────────────────────────────────────────────────── */
 #player-area {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  height: calc(100svh - 50px - 60px);
+  flex-shrink: 0;
   overflow: hidden;
   background: #000;
+}
+
+@supports not (height: 100svh) {
+  #player-area { height: calc(100vh - 50px - 60px); }
 }
 
 
@@ -203,6 +200,9 @@ html, body {
 
 /* ─── Video fade transition ─────────────────────────────────────────────────── */
 #video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
