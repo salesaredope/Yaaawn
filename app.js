@@ -300,7 +300,6 @@ const state = {
   videosWatched: 0,
   modalShown:    false,
   cookieConsent: null,
-  muted:         true,
 };
 
 // ─── DOM refs ─────────────────────────────────────────────────────────────────
@@ -328,8 +327,6 @@ const el = {
   btnCookieAccept:  document.getElementById('btn-cookie-accept'),
   btnCookieDecline: document.getElementById('btn-cookie-decline'),
   tapOverlay:       document.getElementById('tap-overlay'),
-  btnMute:          document.getElementById('btn-mute'),
-  btnShare:         document.getElementById('btn-share'),
   a2hsBanner:       document.getElementById('a2hs-banner'),
   btnA2hsInstall:   document.getElementById('btn-a2hs-install'),
   btnA2hsDismiss:   document.getElementById('btn-a2hs-dismiss'),
@@ -364,7 +361,6 @@ function saveState() {
   localStorage.setItem('yawn_videosWatched', state.videosWatched);
   localStorage.setItem('yawn_modalShown',    state.modalShown);
   localStorage.setItem('yawn_cookieConsent', state.cookieConsent || '');
-  localStorage.setItem('yawn_muted',         state.muted);
 }
 
 function loadState() {
@@ -385,9 +381,6 @@ function loadState() {
 
   const consent = localStorage.getItem('yawn_cookieConsent');
   if (consent === 'accepted' || consent === 'declined') state.cookieConsent = consent;
-
-  const muted = localStorage.getItem('yawn_muted');
-  if (muted !== null) state.muted = muted !== 'false';
 }
 
 // ─── Language ─────────────────────────────────────────────────────────────────
@@ -444,7 +437,7 @@ function loadVideo(mode, index) {
   setTimeout(() => {
     el.videoPlayer.src = src;
     el.videoPlayer.currentTime = 0;
-    el.videoPlayer.muted = state.muted;
+    el.videoPlayer.muted = true;
     el.videoPlayer.load();
     el.tapOverlay.classList.add('hidden');
     el.videoPlayer.play().catch(() => {
@@ -623,36 +616,6 @@ function initSwipe() {
   }, { passive: true });
 }
 
-// ─── Mute toggle ──────────────────────────────────────────────────────────────
-function updateMuteButton() {
-  el.btnMute.textContent = state.muted ? '🔇' : '🔊';
-}
-
-function toggleMute() {
-  state.muted = !state.muted;
-  el.videoPlayer.muted = state.muted;
-  saveState();
-  updateMuteButton();
-}
-
-// ─── Share ────────────────────────────────────────────────────────────────────
-function shareApp() {
-  const shareData = {
-    title: 'Yawn.',
-    text: 'This made me yawn in seconds — try it',
-    url: window.location.href,
-  };
-
-  if (navigator.share) {
-    navigator.share(shareData).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      el.shareToast.classList.remove('hidden');
-      setTimeout(() => el.shareToast.classList.add('hidden'), 2000);
-    }).catch(() => {});
-  }
-}
-
 // ─── A2HS ─────────────────────────────────────────────────────────────────────
 let deferredPrompt = null;
 
@@ -749,11 +712,12 @@ function bindEvents() {
     if (state.mode === 'humans') {
       state.videosWatched++;
       saveState();
-      if (state.videosWatched === 1) showA2HSBanner();
-      if (state.videosWatched >= 2 && !state.modalShown) {
-        setTimeout(showUnlockModal, 800);
-        return;
-      }
+      // Unlock modal temporarily disabled
+      // if (state.videosWatched === 1) showA2HSBanner();
+      // if (state.videosWatched >= 2 && !state.modalShown) {
+      //   setTimeout(showUnlockModal, 800);
+      //   return;
+      // }
     }
     nextVideo();
   });
@@ -763,8 +727,6 @@ function bindEvents() {
     el.tapOverlay.classList.add('hidden');
   });
 
-  el.btnMute.addEventListener('click', toggleMute);
-  el.btnShare.addEventListener('click', shareApp);
   document.getElementById('btn-audio').addEventListener('click', toggleAmbient);
 
   el.btnA2hsInstall.addEventListener('click', () => {
@@ -821,7 +783,6 @@ function init() {
 
   populateLangSelect(state.language);
   applyTranslations(state.language);
-  updateMuteButton();
   bindEvents();
   initA2HS();
   initAmbientAudio();

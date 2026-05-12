@@ -20,7 +20,14 @@ html, body {
   justify-content: center;
 }
 
-#screen-player { min-height: 100vh; }
+#screen-player {
+  height: 100svh;
+  overflow: hidden;
+}
+
+@supports not (height: 100svh) {
+  #screen-player { height: 100vh; }
+}
 
 /* ─── Dot zoom transition ───────────────────────────────────────────────────── */
 #title-dot {
@@ -170,15 +177,12 @@ html, body {
 /* ─── Player Area ───────────────────────────────────────────────────────────── */
 #player-area {
   position: relative;
-  height: calc(100svh - 50px - 60px);
-  flex-shrink: 0;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
   background: #000;
 }
 
-@supports not (height: 100svh) {
-  #player-area { height: calc(100vh - 50px - 60px); }
-}
 
 /* ─── Progress Bar ──────────────────────────────────────────────────────────── */
 #progress-bar-container {
@@ -225,9 +229,7 @@ html, body {
 }
 
 .player-action-btn:active { background: rgba(0,0,0,0.6); }
-.btn-mute  { top: 14px; right: 14px; }
-.btn-share { top: 14px; right: 62px; }
-.btn-audio { top: 14px; right: 110px; }
+.btn-audio { top: 14px; right: 14px; }
 
 /* ─── Video Player ──────────────────────────────────────────────────────────── */
 #player-wrapper {
@@ -603,23 +605,6 @@ html, body {
 .btn-a2hs-dismiss { background: none; color: #666; }
 .btn-a2hs-install { background: #fff; color: #000; border-color: #fff; }
 .btn-a2hs:active  { opacity: 0.8; }
-
-/* ─── Share Toast ───────────────────────────────────────────────────────────── */
-#share-toast {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  color: #000;
-  font-size: 13px;
-  padding: 10px 20px;
-  border-radius: 50px;
-  z-index: 500;
-  pointer-events: none;
-}
-
-#share-toast.hidden { display: none; }
 
 /* ─── Tap to Play Overlay ───────────────────────────────────────────────────── */
 #tap-overlay {
