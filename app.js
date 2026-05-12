@@ -414,6 +414,7 @@ function preloadNext(mode, currentIndex) {
 
 // ─── Screens ──────────────────────────────────────────────────────────────────
 function showPlayer() {
+  el.screenEntry.style.pointerEvents = 'none';
   const dot = document.getElementById('title-dot');
   dot.classList.add('dot-zooming');
 
