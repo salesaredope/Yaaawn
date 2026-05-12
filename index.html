@@ -27,12 +27,19 @@
 <!-- Entry Screen -->
 <div id="screen-entry" class="screen active">
   <div class="entry-content">
-    <h1 class="app-title">Yawn.</h1>
+    <h1 class="app-title">Yawn<span id="title-dot">.</span></h1>
     <p class="app-subtitle" data-i18n="subtitle">pop your ears · relax · just breathe</p>
     <div class="lang-selector-wrap">
       <select id="lang-select" aria-label="Select language"></select>
     </div>
     <button id="btn-go" class="btn-go" data-i18n="btnGo">Go!</button>
+
+    <div id="why-section">
+      <button id="why-toggle" class="why-toggle" data-i18n="whyTitle">Why should I click it?</button>
+      <div id="why-body" class="why-body hidden">
+        <p id="why-text"></p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -55,6 +62,12 @@
 
     <div id="player-wrapper">
       <video id="video-player" playsinline muted autoplay></video>
+      <div id="tap-overlay" class="hidden" aria-label="Tap to play">
+        <div id="tap-icon">&#9654;</div>
+      </div>
+      <button id="btn-mute" class="player-action-btn btn-mute" aria-label="Toggle mute">🔇</button>
+      <button id="btn-share" class="player-action-btn btn-share" aria-label="Share">&#8679;</button>
+      <button id="btn-audio" class="player-action-btn btn-audio" aria-label="Toggle ambient sound">🎵</button>
       <button id="btn-prev" class="nav-btn nav-prev" aria-label="Previous video">&#8592;</button>
       <button id="btn-next" class="nav-btn nav-next" aria-label="Next video">&#8594;</button>
     </div>
@@ -136,6 +149,20 @@
     </div>
   </div>
 </div>
+
+<!-- Add to Home Screen nudge -->
+<div id="a2hs-banner" class="hidden" role="region">
+  <div class="a2hs-content">
+    <span id="a2hs-text">Add Yawn. to your home screen for quick access on flights.</span>
+    <div class="a2hs-buttons">
+      <button id="btn-a2hs-dismiss" class="btn-a2hs btn-a2hs-dismiss">Not now</button>
+      <button id="btn-a2hs-install" class="btn-a2hs btn-a2hs-install">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Share toast -->
+<div id="share-toast" class="hidden">Link copied!</div>
 
 <script src="./app.js"></script>
 </body>

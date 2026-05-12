@@ -22,6 +22,29 @@ html, body {
 
 #screen-player { min-height: 100vh; }
 
+/* ─── Dot zoom transition ───────────────────────────────────────────────────── */
+#title-dot {
+  display: inline-block;
+  transform-origin: center center;
+  transition: transform 0.5s cubic-bezier(0.55, 0, 1, 0.45),
+              opacity 0.5s ease;
+}
+
+#title-dot.dot-zooming {
+  transform: scale(300);
+  opacity: 0;
+}
+
+/* ─── Player entrance ───────────────────────────────────────────────────────── */
+.player-entering {
+  animation: playerFadeIn 0.4s ease forwards;
+}
+
+@keyframes playerFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ─── Entry Screen ──────────────────────────────────────────────────────────── */
 .entry-content {
   display: flex;
@@ -82,6 +105,57 @@ html, body {
 
 .btn-go:active { opacity: 0.8; }
 
+/* ─── Why Section ───────────────────────────────────────────────────────────── */
+#why-section {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+}
+
+.why-toggle {
+  background: none;
+  border: none;
+  color: #555;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 0;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.3px;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.why-toggle::after {
+  content: ' ↓';
+  font-size: 11px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.why-toggle.why-open::after {
+  transform: rotate(180deg);
+}
+
+.why-toggle:hover { color: #888; }
+
+.why-body {
+  padding: 16px 0 8px;
+  text-align: left;
+}
+
+.why-body span {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.why-body span:last-child { margin-bottom: 0; }
+.why-body.hidden { display: none; }
+
 /* ─── Banner Ad ─────────────────────────────────────────────────────────────── */
 #banner-ad-container {
   height: 50px;
@@ -122,21 +196,45 @@ html, body {
   width: 0%;
 }
 
+/* ─── Video fade transition ─────────────────────────────────────────────────── */
+#video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.15s ease;
+}
+
+/* ─── Player Action Buttons (mute, share) ───────────────────────────────────── */
+.player-action-btn {
+  position: absolute;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.player-action-btn:active { background: rgba(0,0,0,0.6); }
+.btn-mute  { top: 14px; right: 14px; }
+.btn-share { top: 14px; right: 62px; }
+.btn-audio { top: 14px; right: 110px; }
+
 /* ─── Video Player ──────────────────────────────────────────────────────────── */
 #player-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
 }
-
-#video-player {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* ─── Nav Buttons ───────────────────────────────────────────────────────────── */
 .nav-btn {
   position: absolute;
   top: 50%;
@@ -461,8 +559,102 @@ html, body {
 .btn-cookie-accept  { background: #fff; color: #000; border-color: #fff; }
 .btn-cookie:active  { opacity: 0.8; }
 
+/* ─── A2HS Banner ───────────────────────────────────────────────────────────── */
+#a2hs-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #111;
+  border-bottom: 1px solid #222;
+  z-index: 400;
+  padding: 12px 20px;
+}
+
+#a2hs-banner.hidden { display: none; }
+
+.a2hs-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 640px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+#a2hs-text {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.a2hs-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+
+.btn-a2hs {
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-a2hs-dismiss { background: none; color: #666; }
+.btn-a2hs-install { background: #fff; color: #000; border-color: #fff; }
+.btn-a2hs:active  { opacity: 0.8; }
+
+/* ─── Share Toast ───────────────────────────────────────────────────────────── */
+#share-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  z-index: 500;
+  pointer-events: none;
+}
+
+#share-toast.hidden { display: none; }
+
+/* ─── Tap to Play Overlay ───────────────────────────────────────────────────── */
+#tap-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  z-index: 7;
+  cursor: pointer;
+}
+
+#tap-overlay.hidden { display: none !important; }
+
+#tap-icon {
+  width: 72px;
+  height: 72px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #fff;
+  padding-left: 4px;
+}
+
 /* ─── Utility ───────────────────────────────────────────────────────────────── */
 .hidden { display: none !important; }
+
+/* ─── Hide SEO on mobile ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #seo-section { display: none; }
+}
 
 /* ─── Desktop centering ─────────────────────────────────────────────────────── */
 @media (min-width: 500px) {
