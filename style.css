@@ -22,20 +22,6 @@ html, body {
 
 #screen-player { min-height: 100vh; }
 
-/* ─── Dot zoom transition ───────────────────────────────────────────────────── */
-#title-dot {
-  display: inline-block;
-  transform-origin: center center;
-  will-change: transform, opacity;
-  transition: transform 0.5s cubic-bezier(0.55, 0, 1, 0.45),
-              opacity 0.5s ease;
-}
-
-#title-dot.dot-zooming {
-  transform: scale(300);
-  opacity: 0;
-}
-
 /* ─── Player entrance ───────────────────────────────────────────────────────── */
 .player-entering {
   animation: playerFadeIn 0.4s ease forwards;

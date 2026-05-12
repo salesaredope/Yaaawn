@@ -2,22 +2,22 @@
   "name": "Yawn.",
   "short_name": "Yawn.",
   "description": "Trigger a yawn to pop your ears on the plane. Mirror neuron therapy.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
   "lang": "en",
-  "scope": "/",
+  "scope": "./",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

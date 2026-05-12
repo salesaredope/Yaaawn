@@ -414,18 +414,12 @@ function preloadNext(mode, currentIndex) {
 
 // ─── Screens ──────────────────────────────────────────────────────────────────
 function showPlayer() {
-  el.screenEntry.style.pointerEvents = 'none';
-  const dot = document.getElementById('title-dot');
-  dot.classList.add('dot-zooming');
-
-  setTimeout(() => {
-    el.screenEntry.classList.remove('active');
-    el.screenPlayer.classList.add('active');
-    el.screenPlayer.classList.add('player-entering');
-    loadVideo(state.mode, state.videoIndex);
-    updateTabs();
-    setTimeout(() => el.screenPlayer.classList.remove('player-entering'), 400);
-  }, 480);
+  el.screenEntry.classList.remove('active');
+  el.screenPlayer.classList.add('active');
+  el.screenPlayer.classList.add('player-entering');
+  loadVideo(state.mode, state.videoIndex);
+  updateTabs();
+  setTimeout(() => el.screenPlayer.classList.remove('player-entering'), 400);
 }
 
 // ─── Video ────────────────────────────────────────────────────────────────────
@@ -433,21 +427,39 @@ function loadVideo(mode, index) {
   const list = PLAYLIST[mode];
   const src  = list[index % list.length];
 
+  // Fade out immediately — no setTimeout, preserves user-activation budget
   el.videoPlayer.style.opacity = '0';
+  el.tapOverlay.classList.add('hidden');
 
-  setTimeout(() => {
-    el.videoPlayer.src = src;
-    el.videoPlayer.currentTime = 0;
-    el.videoPlayer.muted = true;
-    el.videoPlayer.load();
-    el.tapOverlay.classList.add('hidden');
-    el.videoPlayer.play().catch(() => {
-      el.tapOverlay.classList.remove('hidden');
-    });
+  // Reveal only when the first frame is decoded, not before.
+  // Fixes black-video flash on desktop where decoding lags behind play().
+  let revealed = false;
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    clearTimeout(revealFallback);
     el.videoPlayer.style.opacity = '1';
-    preloadNext(mode, index);
-    updateProgressBar(mode, index);
-  }, 150);
+  }
+  // Safety net: reveal unconditionally after 800 ms (handles cached/fast loads
+  // where canplay may have already fired before the listener was attached).
+  const revealFallback = setTimeout(reveal, 800);
+
+  el.videoPlayer.addEventListener('loadeddata', reveal, { once: true });
+  el.videoPlayer.addEventListener('canplay',    reveal, { once: true });
+
+  el.videoPlayer.src = src;
+  el.videoPlayer.currentTime = 0;
+  el.videoPlayer.muted = true;
+  el.videoPlayer.load();
+
+  el.videoPlayer.play().catch(() => {
+    // Autoplay blocked (browser policy) — show the tap-to-play overlay instead.
+    reveal();
+    el.tapOverlay.classList.remove('hidden');
+  });
+
+  preloadNext(mode, index);
+  updateProgressBar(mode, index);
 }
 
 function nextVideo() {
