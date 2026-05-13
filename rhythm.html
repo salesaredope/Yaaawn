@@ -393,7 +393,7 @@
   </div>
 
   <div id="btn-now-wrap">
-    <button id="btn-now">Use current time</button>
+    <button id="btn-now">I'm going to sleep now</button>
   </div>
 
   <div class="divider"></div>
@@ -403,7 +403,7 @@
   </div>
 
   <div id="science-note">
-    <p>Based on 90-min sleep cycles + 14 min to fall asleep. Waking between cycles means lighter sleep, less grogginess.</p>
+    <p>Times already account for the ~14 min it takes to fall asleep. Get into bed at the shown time.</p>
   </div>
 
   <section id="seo-section">
@@ -679,6 +679,8 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
       mode === 'wake' ? 'Pick your wake-up time' : 'Pick your bedtime';
     document.getElementById('results-label').textContent =
       mode === 'wake' ? 'Bedtimes' : 'Wake-up times';
+    document.getElementById('btn-now').textContent =
+      mode === 'wake' ? 'I just woke up' : 'I\'m going to sleep now';
     calculate();
   });
 });
