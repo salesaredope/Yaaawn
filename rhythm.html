@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Rhythm. — sleep cycle calculator</title>
+  <meta name="description" content="Find the perfect bedtime or wake-up time based on 90-minute sleep cycles. Free, offline, no signup.">
+  <link rel="canonical" href="https://getyawn.app/rhythm.html">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.json">
+  <style>
+    /* ─── Reset ──────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: Georgia, 'Times New Roman', serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    /* ─── Layout ─────────────────────────────────────────────────────────────── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 64px; /* bottom nav */
+    }
+
+    /* ─── Header ─────────────────────────────────────────────────────────────── */
+    #header {
+      padding: 48px 24px 32px;
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #555;
+      margin-top: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Mode tabs ──────────────────────────────────────────────────────────── */
+    #mode-tabs {
+      display: flex;
+      margin: 0 24px 32px;
+      border: 1px solid #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .mode-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #555;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: 0.2px;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .mode-tab:first-child { border-right: 1px solid #1a1a1a; }
+    .mode-tab.active { color: #fff; background: #111; }
+
+    /* ─── Input section ──────────────────────────────────────────────────────── */
+    #input-section {
+      padding: 0 24px 32px;
+      text-align: center;
+    }
+
+    .input-label {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+
+    .time-input-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    input[type="time"] {
+      background: #111;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-family: inherit;
+      font-size: 32px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      outline: none;
+      -webkit-appearance: none;
+      text-align: center;
+    }
+
+    input[type="time"]:focus { border-color: #555; }
+
+    /* webkit time input color fix */
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.4;
+      cursor: pointer;
+    }
+
+    #btn-now {
+      background: none;
+      border: 1px solid #333;
+      color: #555;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    #btn-now:hover { color: #fff; border-color: #555; }
+    #btn-now.hidden { display: none; }
+
+    /* ─── Divider ─────────────────────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: #111;
+      margin: 0 24px 32px;
+    }
+
+    /* ─── Results ─────────────────────────────────────────────────────────────── */
+    #results {
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #results-label {
+      font-size: 11px;
+      color: #333;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .result-card {
+      background: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 14px;
+      padding: 18px 20px 16px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .result-card.recommended {
+      border-color: #fff;
+    }
+
+    .recommended-badge {
+      position: absolute;
+      top: -1px;
+      right: 16px;
+      background: #fff;
+      color: #000;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 0 0 8px 8px;
+      font-family: Georgia, serif;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-time {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .card-meta {
+      text-align: right;
+    }
+
+    .card-hours {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .card-quality {
+      font-size: 11px;
+      color: #444;
+      margin-top: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Cycle bar ───────────────────────────────────────────────────────────── */
+    .cycle-bar {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .cycle-segment {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    /* Deep sleep dominant (early cycles) */
+    .cycle-segment.deep  { background: #3a3a3a; }
+    /* Mixed (middle cycles) */
+    .cycle-segment.mixed { background: #555; }
+    /* REM dominant (late cycles) */
+    .cycle-segment.rem   { background: #888; }
+
+    /* Wake marker on last segment */
+    .cycle-segment.wake-here::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      border: 2px solid #000;
+    }
+
+    /* ─── Empty state ─────────────────────────────────────────────────────────── */
+    #empty-state {
+      text-align: center;
+      padding: 32px 0;
+      color: #333;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Science note ────────────────────────────────────────────────────────── */
+    #science-note {
+      padding: 32px 24px 16px;
+      text-align: center;
+    }
+
+    #science-note p {
+      font-size: 11px;
+      color: #2a2a2a;
+      line-height: 1.7;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* ─── Bottom nav ─────────────────────────────────────────────────────────── */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: #0d0d0d;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      align-items: stretch;
+      z-index: 50;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #444;
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
+    .nav-item.active { color: #fff; }
+    .nav-item:hover  { color: #888; }
+
+    .nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-label { font-size: 10px; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Header -->
+  <div id="header">
+    <h1 class="page-title">Rhythm.</h1>
+    <p class="page-subtitle">wake up between cycles, not inside them</p>
+  </div>
+
+  <!-- Mode tabs -->
+  <div id="mode-tabs">
+    <button class="mode-tab active" data-mode="wake">I need to wake up at…</button>
+    <button class="mode-tab" data-mode="sleep">I'm going to sleep at…</button>
+  </div>
+
+  <!-- Input -->
+  <div id="input-section">
+    <p class="input-label" id="input-label">Pick your wake-up time</p>
+    <div class="time-input-wrap">
+      <input type="time" id="time-input" value="07:00">
+      <button id="btn-now">Now</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Results -->
+  <div id="results">
+    <p id="results-label">Bedtimes</p>
+    <div id="empty-state">Set a time above to see your sleep windows.</div>
+  </div>
+
+  <!-- Science note -->
+  <div id="science-note">
+    <p>Based on 90-min sleep cycles + 14 min to fall asleep. Each cycle moves from deep sleep toward REM. Waking between cycles means lighter sleep, less grogginess.</p>
+  </div>
+
+</div>
+
+<!-- Bottom nav -->
+<nav id="bottom-nav">
+  <a class="nav-item" href="./index.html">
+    <span class="nav-icon">🥱</span>
+    <span class="nav-label">Yawn</span>
+  </a>
+  <a class="nav-item active" href="./rhythm.html">
+    <span class="nav-icon">🌙</span>
+    <span class="nav-label">Rhythm</span>
+  </a>
+  <a class="nav-item" href="./dream.html">
+    <span class="nav-icon">💭</span>
+    <span class="nav-label">Dream</span>
+  </a>
+</nav>
+
+<script>
+'use strict';
+
+const CYCLE_MINUTES  = 90;
+const LATENCY_MINUTES = 14;
+const MIN_CYCLES = 3;
+const MAX_CYCLES = 6;
+
+const QUALITY = {
+  3: 'Minimum — 4.5 hrs',
+  4: 'Acceptable — 6 hrs',
+  5: 'Ideal — 7.5 hrs',
+  6: 'Full night — 9 hrs',
+};
+
+const SEGMENT_TYPE = {
+  1: 'deep',
+  2: 'deep',
+  3: 'mixed',
+  4: 'mixed',
+  5: 'rem',
+  6: 'rem',
+};
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let mode = 'wake'; // 'wake' | 'sleep'
+
+// ─── DOM refs ─────────────────────────────────────────────────────────────────
+const timeInput    = document.getElementById('time-input');
+const btnNow       = document.getElementById('btn-now');
+const modeTabs     = document.querySelectorAll('.mode-tab');
+const resultsEl    = document.getElementById('results');
+const resultsLabel = document.getElementById('results-label');
+const inputLabel   = document.getElementById('input-label');
+const emptyState   = document.getElementById('empty-state');
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function parseTime(val) {
+  // Returns total minutes from midnight
+  const [h, m] = val.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function formatTime(totalMinutes) {
+  const normalized = ((totalMinutes % 1440) + 1440) % 1440;
+  const h = Math.floor(normalized / 60);
+  const m = normalized % 60;
+  const period = h < 12 ? 'AM' : 'PM';
+  const displayH = h % 12 === 0 ? 12 : h % 12;
+  const displayM = m.toString().padStart(2, '0');
+  return `${displayH}:${displayM} ${period}`;
+}
+
+function totalHours(cycles) {
+  const mins = cycles * CYCLE_MINUTES + LATENCY_MINUTES;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+// ─── Cycle bar ────────────────────────────────────────────────────────────────
+function buildCycleBar(cycles) {
+  const bar = document.createElement('div');
+  bar.className = 'cycle-bar';
+
+  for (let i = 1; i <= cycles; i++) {
+    const seg = document.createElement('div');
+    seg.className = `cycle-segment ${SEGMENT_TYPE[i] || 'rem'}`;
+    if (i === cycles) seg.classList.add('wake-here');
+    bar.appendChild(seg);
+  }
+
+  return bar;
+}
+
+// ─── Build result card ────────────────────────────────────────────────────────
+function buildCard(timeMinutes, cycles, recommended) {
+  const card = document.createElement('div');
+  card.className = 'result-card' + (recommended ? ' recommended' : '');
+
+  if (recommended) {
+    const badge = document.createElement('div');
+    badge.className = 'recommended-badge';
+    badge.textContent = 'Recommended';
+    card.appendChild(badge);
+  }
+
+  const top = document.createElement('div');
+  top.className = 'card-top';
+
+  const timeEl = document.createElement('div');
+  timeEl.className = 'card-time';
+  timeEl.textContent = formatTime(timeMinutes);
+
+  const meta = document.createElement('div');
+  meta.className = 'card-meta';
+
+  const hoursEl = document.createElement('div');
+  hoursEl.className = 'card-hours';
+  hoursEl.textContent = totalHours(cycles);
+
+  const qualityEl = document.createElement('div');
+  qualityEl.className = 'card-quality';
+  qualityEl.textContent = `${cycles} cycles`;
+
+  meta.appendChild(hoursEl);
+  meta.appendChild(qualityEl);
+
+  top.appendChild(timeEl);
+  top.appendChild(meta);
+  card.appendChild(top);
+  card.appendChild(buildCycleBar(cycles));
+
+  return card;
+}
+
+// ─── Calculate ────────────────────────────────────────────────────────────────
+function calculate() {
+  const inputMinutes = parseTime(timeInput.value);
+
+  // Remove old cards (keep label + empty state)
+  const oldCards = resultsEl.querySelectorAll('.result-card');
+  oldCards.forEach(c => c.remove());
+  emptyState.style.display = 'none';
+
+  const cards = [];
+
+  for (let cycles = MAX_CYCLES; cycles >= MIN_CYCLES; cycles--) {
+    const totalSleepMins = cycles * CYCLE_MINUTES + LATENCY_MINUTES;
+    let targetMinutes;
+
+    if (mode === 'wake') {
+      // Calculate bedtime: wake time minus total sleep
+      targetMinutes = inputMinutes - totalSleepMins;
+    } else {
+      // Calculate wake time: sleep time plus total sleep
+      targetMinutes = inputMinutes + totalSleepMins;
+    }
+
+    cards.push({ targetMinutes, cycles, recommended: cycles === 5 });
+  }
+
+  cards.forEach(({ targetMinutes, cycles, recommended }) => {
+    resultsEl.appendChild(buildCard(targetMinutes, cycles, recommended));
+  });
+}
+
+// ─── Events ───────────────────────────────────────────────────────────────────
+timeInput.addEventListener('change', calculate);
+timeInput.addEventListener('input', calculate);
+
+btnNow.addEventListener('click', () => {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
+  timeInput.value = `${h}:${m}`;
+  calculate();
+});
+
+modeTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    mode = tab.dataset.mode;
+    modeTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    if (mode === 'wake') {
+      inputLabel.textContent = 'Pick your wake-up time';
+      resultsLabel.textContent = 'Bedtimes';
+      btnNow.classList.add('hidden');
+      timeInput.value = '07:00';
+    } else {
+      inputLabel.textContent = 'Pick your bedtime';
+      resultsLabel.textContent = 'Wake-up times';
+      btnNow.classList.remove('hidden');
+      timeInput.value = '23:00';
+    }
+
+    calculate();
+  });
+});
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+calculate();
+</script>
+</body>
+</html>

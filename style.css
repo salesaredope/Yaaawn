@@ -623,6 +623,42 @@ html, body {
   padding-left: 4px;
 }
 
+/* ─── Bottom Nav ────────────────────────────────────────────────────────────── */
+#bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: #0d0d0d;
+  border-top: 1px solid #1a1a1a;
+  display: flex;
+  align-items: stretch;
+  z-index: 50;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #444;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
+.nav-item.active { color: #fff; }
+
+.nav-icon  { font-size: 18px; line-height: 1; }
+.nav-label { font-size: 10px; letter-spacing: 0.5px; }
+
+/* Push player screen content up to avoid nav overlap */
+#screen-player { padding-bottom: 64px; }
+
 /* ─── Utility ───────────────────────────────────────────────────────────────── */
 .hidden { display: none !important; }
 
