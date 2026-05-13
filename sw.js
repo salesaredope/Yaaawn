@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yawn-v7';
+const CACHE_NAME = 'yawn-v8';
 
 // App shell — cached on install
 const SHELL_ASSETS = [
