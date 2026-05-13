@@ -7,6 +7,7 @@ const SHELL_ASSETS = [
   './style.css',
   './app.js',
   './manifest.json',
+  './favicon.ico',
 ];
 
 // ─── Install: cache app shell ─────────────────────────────────────────────────
