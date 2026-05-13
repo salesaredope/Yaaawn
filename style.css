@@ -56,24 +56,23 @@ html, body {
   letter-spacing: 0.5px;
 }
 
-.lang-selector-wrap { margin-top: 8px; }
+.lang-selector-wrap { margin-top: 4px; }
 
 #lang-select {
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 10px 16px;
+  background: none;
+  color: #444;
+  border: none;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
+  padding: 4px 8px;
+  letter-spacing: 0.3px;
+  -webkit-appearance: auto;
+  appearance: auto;
   text-align: center;
-  min-width: 160px;
 }
 
-#lang-select:focus { outline: none; border-color: #555; }
+#lang-select:focus { outline: none; }
 
 .btn-go {
   background: #fff;
@@ -96,7 +95,7 @@ html, body {
 #why-section {
   width: 100%;
   max-width: 320px;
-  margin-top: 40px;
+  margin-top: 0;
 }
 
 .why-toggle {
@@ -265,7 +264,7 @@ html, body {
   flex: 1;
   background: none;
   border: none;
-  color: #555;
+  color: rgba(255,255,255,0.4);
   font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.5px;
@@ -317,9 +316,7 @@ html, body {
 #seo-section strong { color: #ccc; }
 
 .seo-tags {
-  font-size: 11px !important;
-  color: #666 !important;
-  margin-top: 32px;
+  display: none !important;
 }
 
 /* ─── Modal ─────────────────────────────────────────────────────────────────── */
@@ -653,7 +650,7 @@ html, body {
 .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
 .nav-item.active { color: #fff; }
 
-.nav-icon  { font-size: 18px; line-height: 1; }
+.nav-icon  { display: flex; align-items: center; justify-content: center; line-height: 1; }
 .nav-label { font-size: 10px; letter-spacing: 0.5px; }
 
 /* Push player screen content up to avoid nav overlap */

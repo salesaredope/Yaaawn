@@ -26,7 +26,7 @@ const LANGUAGES = [
 const UI_STRINGS = {
   en: {
     subtitle: 'pop your ears · relax · just breathe',
-    btnGo: 'Go!',
+    btnGo: 'Watch & Yawn',
     whyTitle: 'Why should I click it?',
     whyText: 'Yawning is one of the most effective ways to equalize pressure in your ears: during flights, altitude changes or after diving.\n\nWhen you yawn, the Eustachian tube (the small canal connecting your middle ear to your throat) opens briefly. Air flows in and equalizes the pressure that causes that plugged, uncomfortable feeling.\n\nThe problem is that yawning on command is hard. That\'s where mirror neurons come in.\n\nYour brain contains specialized cells that fire both when you perform an action and when you observe someone else performing it. Yawning is one of the most contagious behaviors known: seeing it, hearing it or even reading about it lowers the threshold for your own yawn reflex.\n\nYawn. uses this mechanism deliberately. Watch the videos, let your brain do the rest.',
     tabHumans: 'Humans', tabAnimals: ' Animals',

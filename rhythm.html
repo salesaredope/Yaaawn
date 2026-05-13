@@ -66,7 +66,7 @@
       flex: 1;
       background: none;
       border: none;
-      color: #555;
+      color: rgba(255,255,255,0.4);
       font-family: inherit;
       font-size: 13px;
       padding: 12px 8px;
@@ -257,35 +257,35 @@
     .card-hours { font-size: 14px; color: #666; }
     .card-quality { font-size: 11px; color: #444; margin-top: 2px; letter-spacing: 0.3px; }
 
-    /* ─── Cycle bar ───────────────────────────────────────────────────────────── */
-    .cycle-bar {
-      display: flex;
-      gap: 3px;
-      align-items: center;
+    /* ─── Editorial disclosure ───────────────────────────────────────────────── */
+    #editorial {
+      margin-top: 8px;
+      margin-bottom: 4px;
     }
 
-    .cycle-segment {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      position: relative;
+    #editorial summary {
+      font-size: 12px;
+      color: #444;
+      cursor: pointer;
+      padding: 10px 0 6px;
+      list-style: none;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
     }
 
-    .cycle-segment.deep  { background: #3a3a3a; }
-    .cycle-segment.mixed { background: #555; }
-    .cycle-segment.rem   { background: #888; }
+    #editorial summary::-webkit-details-marker { display: none; }
+    #editorial[open] summary { color: #666; }
 
-    .cycle-segment.wake-here::after {
-      content: '';
-      position: absolute;
-      right: -1px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 10px;
-      height: 10px;
-      background: #fff;
-      border-radius: 50%;
-      border: 2px solid #000;
+    .editorial-body {
+      padding: 12px 0 8px;
+      border-top: 1px solid #111;
+    }
+
+    .editorial-body p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 10px;
     }
 
     /* ─── Science note ────────────────────────────────────────────────────────── */
@@ -296,7 +296,7 @@
 
     #science-note p {
       font-size: 11px;
-      color: #2a2a2a;
+      color: #555;
       line-height: 1.7;
       max-width: 320px;
       margin: 0 auto;
@@ -331,11 +331,7 @@
       margin-bottom: 12px;
     }
 
-    .seo-tags {
-      font-size: 11px !important;
-      color: #2a2a2a !important;
-      margin-top: 32px;
-    }
+    .seo-tags { display: none !important; }
 
     /* ─── Bottom nav ─────────────────────────────────────────────────────────── */
     #bottom-nav {
@@ -364,7 +360,7 @@
 
     .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
     .nav-item.active { color: #fff; }
-    .nav-icon  { font-size: 18px; line-height: 1; }
+    .nav-icon  { display: flex; align-items: center; justify-content: center; line-height: 1; }
     .nav-label { font-size: 10px; letter-spacing: 0.5px; }
   </style>
 </head>
@@ -400,40 +396,41 @@
 
   <div id="results">
     <p id="results-label">Bedtimes</p>
+    <details id="editorial">
+      <summary>↓ why this works</summary>
+      <div class="editorial-body">
+        <p>You woke up naturally, felt surprisingly clear, then went back to sleep. You woke to your alarm feeling wrecked.</p>
+        <p>That wasn't extra rest: that was sleep inertia. You fell back into a deep sleep stage your brain wasn't ready to leave.</p>
+        <p>Sleep runs in 90-minute cycles. Each ends in a brief window of near-wakefulness before the next begins. Early cycles are heavy on deep slow-wave sleep: restorative, physically intense, brutal to wake from. Later cycles shift toward REM and lighter sleep.</p>
+        <p>Waking between cycles, not inside one, is the difference. Rhythm calculates exactly those windows.</p>
+        <p class="seo-tags">sleep cycle calculator · why do i feel worse after more sleep · sleep inertia · 90 minute sleep cycles · best time to wake up · circadian rhythm · REM sleep · deep sleep stages · how to wake up feeling refreshed</p>
+      </div>
+    </details>
   </div>
 
   <div id="science-note">
     <p>Times already account for the ~14 min it takes to fall asleep. Get into bed at the shown time.</p>
   </div>
 
-  <section id="seo-section">
-    <h2>Why did I feel fine at 5am but awful at 8?</h2>
-    <p>You woke up naturally, felt surprisingly clear, then went back to sleep. You woke to your alarm feeling wrecked.</p>
-    <p>That wasn't extra rest: that was sleep inertia. You fell back into a deep sleep stage your brain wasn't ready to leave.</p>
-
-    <h3>How sleep cycles work</h3>
-    <p>Sleep runs in 90-minute cycles. Each one ends in a brief window of near-wakefulness before the next begins. Early cycles are heavy on deep slow-wave sleep (restorative, physically intense, brutal to wake from). Later cycles shift toward REM and lighter sleep.</p>
-    <p>That's why an early natural wake-up often feels better than a full night cut off by an alarm. Waking between cycles, not inside one, is the difference.</p>
-    <p>Rhythm calculates exactly those windows: the times when your brain is already surfacing, not buried.</p>
-
-    <p class="seo-tags">
-      sleep cycle calculator · why do i feel worse after more sleep · sleep inertia · 90 minute sleep cycles · best time to wake up · circadian rhythm · REM sleep · deep sleep stages · how to wake up feeling refreshed
-    </p>
-  </section>
-
 </div>
 
 <nav id="bottom-nav">
   <a class="nav-item" href="./index.html">
-    <span class="nav-icon">🥱</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 10 Q12 6 19 10"/><path d="M5 14 Q12 20 19 14"/></svg>
+    </span>
     <span class="nav-label">Yawn</span>
   </a>
   <a class="nav-item active" href="./rhythm.html">
-    <span class="nav-icon">🌙</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12 C4 7 6 7 8 12 C10 17 12 17 14 12 C16 7 18 7 20 12"/></svg>
+    </span>
     <span class="nav-label">Rhythm</span>
   </a>
   <a class="nav-item" href="./dream.html">
-    <span class="nav-icon">💭</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </span>
     <span class="nav-label">Dream</span>
   </a>
 </nav>
@@ -590,7 +587,6 @@ function buildCard(timeMinutes, cycles, recommended) {
   top.appendChild(timeEl);
   top.appendChild(meta);
   card.appendChild(top);
-  card.appendChild(buildCycleBar(cycles));
   return card;
 }
 

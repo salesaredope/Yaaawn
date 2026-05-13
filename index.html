@@ -34,16 +34,18 @@
   <div class="entry-content">
     <h1 class="app-title">Yawn.</h1>
     <p class="app-subtitle" data-i18n="subtitle">pop your ears · relax · just breathe</p>
-    <div class="lang-selector-wrap">
-      <select id="lang-select" aria-label="Select language"></select>
-    </div>
-    <button id="btn-go" class="btn-go" data-i18n="btnGo">Go!</button>
 
     <div id="why-section">
       <button id="why-toggle" class="why-toggle" data-i18n="whyTitle">Why should I click it?</button>
       <div id="why-body" class="why-body hidden">
         <p id="why-text"></p>
       </div>
+    </div>
+
+    <button id="btn-go" class="btn-go" data-i18n="btnGo">Watch & Yawn</button>
+
+    <div class="lang-selector-wrap">
+      <select id="lang-select" aria-label="Select language"></select>
     </div>
   </div>
 </div>
@@ -167,15 +169,21 @@
 <!-- Bottom nav -->
 <nav id="bottom-nav">
   <a class="nav-item active" href="./index.html">
-    <span class="nav-icon">🥱</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 10 Q12 6 19 10"/><path d="M5 14 Q12 20 19 14"/></svg>
+    </span>
     <span class="nav-label">Yawn</span>
   </a>
   <a class="nav-item" href="./rhythm.html">
-    <span class="nav-icon">🌙</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12 C4 7 6 7 8 12 C10 17 12 17 14 12 C16 7 18 7 20 12"/></svg>
+    </span>
     <span class="nav-label">Rhythm</span>
   </a>
   <a class="nav-item" href="./dream.html">
-    <span class="nav-icon">💭</span>
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </span>
     <span class="nav-label">Dream</span>
   </a>
 </nav>
