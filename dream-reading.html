@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <title>Dream. — reading</title>
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="manifest" href="./manifest.json">
+  <style>
+    :root {
+      --text-primary:   #F0EDE8;
+      --text-secondary: #9A9590;
+      --text-tertiary:  #606060;
+      --text-ghost:     #303030;
+      --dream-border:   #1C1C1C;
+      --transition:     600ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: var(--text-primary);
+      font-family: Georgia, 'Times New Roman', serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 80px;
+    }
+
+    /* ─── Progress bar ───────────────────────────────────────────────────────── */
+    #progress-bar-wrap {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--text-ghost);
+      z-index: 100;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: var(--text-primary);
+      width: 0%;
+      transition: width var(--transition) ease;
+    }
+
+    /* ─── Header ─────────────────────────────────────────────────────────────── */
+    #header {
+      padding: 40px 28px 20px;
+    }
+
+    .dream-title {
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    /* ─── Dream preview ──────────────────────────────────────────────────────── */
+    #dream-preview {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--dream-border);
+      font-style: italic;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    /* ─── Reading cards ──────────────────────────────────────────────────────── */
+    #readings {
+      padding: 32px 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .author-card {
+      border: 1px solid var(--dream-border);
+      border-radius: 14px;
+      padding: 24px 22px 22px;
+      background: #0D0D0D;
+      transition: opacity var(--transition);
+    }
+
+    /* Synthesis card — elevated treatment, no author label */
+    .synthesis-card {
+      background: #111;
+      border-color: #282828;
+    }
+
+    .author-card.locked {
+      opacity: 0.3;
+    }
+
+    .author-name {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .author-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      min-height: 40px;
+    }
+
+    /* Synthesis text — slightly larger, warmer */
+    .synthesis-card .author-text {
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .author-text.streaming::after {
+      content: '▎';
+      display: inline;
+      animation: blink 1s step-end infinite;
+      color: var(--text-tertiary);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─── Error state ────────────────────────────────────────────────────────── */
+    #error-msg {
+      margin: 32px 28px 0;
+      font-size: 13px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+      display: none;
+    }
+
+    /* ─── Actions ────────────────────────────────────────────────────────────── */
+    #actions {
+      padding: 32px 28px 0;
+      display: flex;
+      gap: 12px;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    #actions.visible { opacity: 1; }
+
+    .btn-action {
+      flex: 1;
+      background: none;
+      border: 1px solid var(--dream-border);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 12px 0;
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+
+    .btn-action:hover { color: var(--text-primary); border-color: var(--text-tertiary); }
+    .btn-action.primary {
+      background: var(--text-primary);
+      color: #000;
+      border-color: var(--text-primary);
+    }
+
+    /* ─── Bottom nav ─────────────────────────────────────────────────────────── */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: #0d0d0d;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      align-items: stretch;
+      z-index: 50;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-family: Georgia, serif;
+      transition: color var(--transition);
+    }
+
+    .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
+    .nav-item.active { color: var(--text-primary); }
+    .nav-icon  { display: flex; align-items: center; justify-content: center; line-height: 1; }
+    .nav-label { font-size: 10px; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<div id="app">
+  <div id="header">
+    <h1 class="dream-title">Dream.</h1>
+    <p id="dream-preview"></p>
+  </div>
+
+  <div id="readings">
+    <!-- Synthesis card — unlabeled, streams first -->
+    <div class="author-card synthesis-card locked" id="card-synthesis">
+      <p class="author-text" id="text-synthesis"></p>
+    </div>
+
+    <!-- Freud card -->
+    <div class="author-card locked" id="card-freud">
+      <p class="author-name">Freud</p>
+      <p class="author-text" id="text-freud"></p>
+    </div>
+
+    <!-- Jung card -->
+    <div class="author-card locked" id="card-jung">
+      <p class="author-name">Jung</p>
+      <p class="author-text" id="text-jung"></p>
+    </div>
+
+    <!-- Fromm card -->
+    <div class="author-card locked" id="card-fromm">
+      <p class="author-name">Fromm</p>
+      <p class="author-text" id="text-fromm"></p>
+    </div>
+  </div>
+
+  <p id="error-msg"></p>
+
+  <div id="actions">
+    <button class="btn-action" id="btn-new" onclick="window.location.href='./dream.html'">new dream</button>
+    <button class="btn-action primary" id="btn-diary" onclick="window.location.href='./dream-diary.html'">diary</button>
+  </div>
+</div>
+
+<nav id="bottom-nav">
+  <a class="nav-item" href="./index.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 10 Q12 6 19 10"/><path d="M5 14 Q12 20 19 14"/></svg>
+    </span>
+    <span class="nav-label">Yawn</span>
+  </a>
+  <a class="nav-item" href="./rhythm.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12 C4 7 6 7 8 12 C10 17 12 17 14 12 C16 7 18 7 20 12"/></svg>
+    </span>
+    <span class="nav-label">Rhythm</span>
+  </a>
+  <a class="nav-item active" href="./dream.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </span>
+    <span class="nav-label">Dream</span>
+  </a>
+</nav>
+
+<script src="./dream-db.js"></script>
+<script>
+'use strict';
+
+const WORKER_URL = 'https://sparkling-mountain-cd02.salesaredope.workers.dev';
+
+// Sequence and progress config for each author
+const SEQUENCE = ['synthesis', 'freud', 'jung', 'fromm'];
+
+const AUTHOR_CONFIG = {
+  synthesis: { start: 2,  end: 23, target: 125 },
+  freud:     { start: 25, end: 48, target: 150 },
+  jung:      { start: 50, end: 73, target: 190 },
+  fromm:     { start: 75, end: 98, target: 140 },
+};
+
+const dreamId = new URLSearchParams(location.search).get('id');
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function unlockCard(author) {
+  const card = document.getElementById(`card-${author}`);
+  card.classList.remove('locked');
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.style.display = 'block';
+  el.textContent = msg;
+  showActions();
+}
+
+function showActions() {
+  document.getElementById('actions').classList.add('visible');
+}
+
+async function streamAuthor(dream, author) {
+  const card    = document.getElementById(`card-${author}`);
+  const textEl  = document.getElementById(`text-${author}`);
+  const cfg     = AUTHOR_CONFIG[author];
+
+  // Unlock and start streaming cursor
+  card.classList.remove('locked');
+  textEl.classList.add('streaming');
+  setProgress(cfg.start);
+
+  let fullText = '';
+
+  try {
+    const response = await fetch(`${WORKER_URL}/interpret`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dream: dream.body, author }),
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const reader  = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+            fullText += parsed.delta.text;
+            textEl.textContent = fullText;
+            const words = fullText.split(/\s+/).length;
+            const pct = cfg.start + (words / cfg.target) * (cfg.end - cfg.start);
+            setProgress(Math.min(cfg.end, pct));
+          }
+        } catch (_) {}
+      }
+    }
+
+    textEl.classList.remove('streaming');
+    setProgress(cfg.end);
+
+    // Persist to DB
+    await DreamDB.updateDream(dreamId, {
+      interpretations: {
+        ...(dream.interpretations || {}),
+        [author]: { text: fullText, generated_at: new Date().toISOString() },
+      },
+    });
+
+    // Update local copy so subsequent saves don't overwrite earlier ones
+    dream.interpretations = dream.interpretations || {};
+    dream.interpretations[author] = { text: fullText };
+
+  } catch (err) {
+    textEl.classList.remove('streaming');
+    console.error(err);
+    showError('Could not reach the interpretation service. Check your connection and try again.');
+    throw err; // stop the sequence
+  }
+}
+
+async function init() {
+  if (!dreamId) { location.href = './dream.html'; return; }
+
+  const dream = await DreamDB.getDream(dreamId);
+  if (!dream) { location.href = './dream.html'; return; }
+
+  document.getElementById('dream-preview').textContent = dream.body;
+  sessionStorage.removeItem('dream_draft');
+
+  // If all four already interpreted, render immediately
+  const allDone = SEQUENCE.every(a => dream.interpretations?.[a]?.text);
+  if (allDone) {
+    SEQUENCE.forEach(a => {
+      document.getElementById(`text-${a}`).textContent = dream.interpretations[a].text;
+      unlockCard(a);
+    });
+    setProgress(100);
+    showActions();
+    return;
+  }
+
+  // Render any already-cached interpretations, find where to resume
+  let startFrom = 0;
+  for (let i = 0; i < SEQUENCE.length; i++) {
+    const a = SEQUENCE[i];
+    if (dream.interpretations?.[a]?.text) {
+      document.getElementById(`text-${a}`).textContent = dream.interpretations[a].text;
+      unlockCard(a);
+      startFrom = i + 1;
+    } else {
+      break;
+    }
+  }
+
+  // Stream remaining authors sequentially
+  try {
+    for (let i = startFrom; i < SEQUENCE.length; i++) {
+      await streamAuthor(dream, SEQUENCE[i]);
+      if (i < SEQUENCE.length - 1) {
+        await delay(1200);
+      }
+    }
+  } catch (_) {
+    return; // error already displayed
+  }
+
+  setProgress(100);
+  await delay(1200);
+  showActions();
+}
+
+init();
+</script>
+</body>
+</html>

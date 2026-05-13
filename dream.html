@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Dream. — your dream diary</title>
+  <meta name="description" content="Capture and interpret your dreams through Freud, Jung, and Fromm. A private dream diary with three analytical voices.">
+  <link rel="canonical" href="https://getyawn.app/dream.html">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="manifest" href="./manifest.json">
+  <style>
+    /* ─── Dream token overrides ──────────────────────────────────────────────── */
+    :root {
+      --text-primary:   #F0EDE8;
+      --text-secondary: #9A9590;
+      --text-tertiary:  #606060;
+      --text-ghost:     #303030;
+      --dream-border:   #1C1C1C;
+      --transition:     600ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: var(--text-primary);
+      font-family: Georgia, 'Times New Roman', serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 64px;
+    }
+
+    /* ─── Capture ─────────────────────────────────────────────────────────────── */
+    #capture {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 28px 32px;
+    }
+
+    .dream-title {
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .dream-subtitle {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.3px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── Privacy notice ─────────────────────────────────────────────────────── */
+    #privacy-notice {
+      font-size: 11px;
+      color: var(--text-ghost);
+      margin-bottom: 20px;
+      letter-spacing: 0.2px;
+      line-height: 1.5;
+    }
+
+    /* ─── Textarea ───────────────────────────────────────────────────────────── */
+    #dream-input {
+      width: 100%;
+      height: 60svh;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--dream-border);
+      border-bottom: 1px solid var(--dream-border);
+      color: var(--text-primary);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 17px;
+      line-height: 1.75;
+      padding: 24px 0;
+      resize: none;
+      outline: none;
+      caret-color: var(--text-primary);
+      transition: border-color var(--transition);
+    }
+
+    #dream-input::placeholder {
+      color: var(--text-ghost);
+    }
+
+    #dream-input:focus {
+      border-color: var(--text-ghost);
+    }
+
+    /* ─── Actions ────────────────────────────────────────────────────────────── */
+    .capture-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    #btn-read {
+      flex: 1;
+      background: var(--text-primary);
+      color: #000;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 0;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+
+    #btn-read:active { opacity: 0.8; }
+
+    #btn-mic {
+      background: none;
+      border: 1px solid var(--dream-border);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: not-allowed;
+      color: var(--text-ghost);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    #btn-mic[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      right: 0;
+      background: #111;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      font-family: Georgia, serif;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      border: 1px solid var(--dream-border);
+    }
+
+    /* ─── Diary link ─────────────────────────────────────────────────────────── */
+    #diary-link {
+      display: block;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: color var(--transition);
+      text-align: right;
+    }
+
+    #diary-link:hover { color: var(--text-secondary); }
+
+    /* ─── Bottom nav ─────────────────────────────────────────────────────────── */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: #0d0d0d;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      align-items: stretch;
+      z-index: 50;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-family: Georgia, serif;
+      transition: color var(--transition);
+    }
+
+    .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
+    .nav-item.active { color: var(--text-primary); }
+    .nav-icon  { display: flex; align-items: center; justify-content: center; line-height: 1; }
+    .nav-label { font-size: 10px; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="capture">
+    <h1 class="dream-title">Dream.</h1>
+    <p class="dream-subtitle">what did you dream?</p>
+    <p id="privacy-notice">your dreams are stored only on this device.</p>
+    <textarea
+      id="dream-input"
+      placeholder="begin here"
+      autofocus
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+    ></textarea>
+    <div class="capture-actions">
+      <button id="btn-read">read</button>
+      <button id="btn-mic" disabled title="voice — coming soon" aria-label="Voice input — coming soon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="11" rx="3"/>
+          <path d="M5 10a7 7 0 0 0 14 0"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="8" y1="22" x2="16" y2="22"/>
+        </svg>
+      </button>
+    </div>
+    <a id="diary-link" href="./dream-diary.html">diary →</a>
+  </div>
+</div>
+
+<nav id="bottom-nav">
+  <a class="nav-item" href="./index.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 10 Q12 6 19 10"/><path d="M5 14 Q12 20 19 14"/></svg>
+    </span>
+    <span class="nav-label">Yawn</span>
+  </a>
+  <a class="nav-item" href="./rhythm.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12 C4 7 6 7 8 12 C10 17 12 17 14 12 C16 7 18 7 20 12"/></svg>
+    </span>
+    <span class="nav-label">Rhythm</span>
+  </a>
+  <a class="nav-item active" href="./dream.html">
+    <span class="nav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </span>
+    <span class="nav-label">Dream</span>
+  </a>
+</nav>
+
+<script src="./dream-db.js"></script>
+<script>
+'use strict';
+
+// ─── Worker endpoint — set after deploying worker/dream-api-worker.js ─────────
+// Replace with your actual Cloudflare Worker URL once deployed.
+const WORKER_URL = 'https://sparkling-mountain-cd02.salesaredope.workers.dev';
+
+document.getElementById('btn-read').addEventListener('click', async () => {
+  const text = document.getElementById('dream-input').value.trim();
+  if (text.length < 10) {
+    document.getElementById('dream-input').focus();
+    return;
+  }
+
+  const btn = document.getElementById('btn-read');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    const entry = await DreamDB.saveDream({ body: text });
+    window.location.href = `./dream-reading.html?id=${entry.id}`;
+  } catch (err) {
+    console.error(err);
+    btn.textContent = 'read';
+    btn.disabled = false;
+  }
+});
+
+// Restore any unsaved draft from sessionStorage
+const saved = sessionStorage.getItem('dream_draft');
+if (saved) {
+  document.getElementById('dream-input').value = saved;
+}
+
+// Autosave draft as user types
+document.getElementById('dream-input').addEventListener('input', (e) => {
+  sessionStorage.setItem('dream_draft', e.target.value);
+});
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

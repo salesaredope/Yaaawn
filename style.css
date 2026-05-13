@@ -1,10 +1,18 @@
+/* ─── Design tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --text-primary:   #F5F5F5;
+  --text-secondary: #A0A0A0;
+  --text-tertiary:  #606060;
+  --text-ghost:     #303030;
+}
+
 /* ─── Reset & Base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   height: 100%;
   background: #000;
-  color: #fff;
+  color: var(--text-primary);
   font-family: Georgia, 'Times New Roman', serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
@@ -47,12 +55,12 @@ html, body {
   font-weight: 400;
   letter-spacing: -2px;
   line-height: 1;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .app-subtitle {
   font-size: clamp(14px, 4vw, 18px);
-  color: #888;
+  color: var(--text-secondary);
   letter-spacing: 0.5px;
 }
 
@@ -60,7 +68,7 @@ html, body {
 
 #lang-select {
   background: none;
-  color: #444;
+  color: var(--text-ghost);
   border: none;
   font-family: inherit;
   font-size: 12px;
@@ -75,7 +83,7 @@ html, body {
 #lang-select:focus { outline: none; }
 
 .btn-go {
-  background: #fff;
+  background: var(--text-primary);
   color: #000;
   border: none;
   border-radius: 50px;
@@ -101,7 +109,7 @@ html, body {
 .why-toggle {
   background: none;
   border: none;
-  color: #555;
+  color: var(--text-tertiary);
   font-family: inherit;
   font-size: 13px;
   cursor: pointer;
@@ -124,7 +132,7 @@ html, body {
   transform: rotate(180deg);
 }
 
-.why-toggle:hover { color: #888; }
+.why-toggle:hover { color: var(--text-secondary); }
 
 .why-body {
   padding: 16px 0 8px;
@@ -134,7 +142,7 @@ html, body {
 .why-body span {
   display: block;
   font-size: 13px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 12px;
 }
@@ -172,13 +180,13 @@ html, body {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: rgba(255,255,255,0.15);
+  background: var(--text-ghost);
   z-index: 10;
 }
 
 #progress-bar {
   height: 100%;
-  background: #fff;
+  background: var(--text-primary);
   transition: width 0.3s ease;
   width: 0%;
 }
@@ -207,7 +215,7 @@ html, body {
 .player-action-btn {
   position: absolute;
   background: rgba(0,0,0,0.35);
-  color: #fff;
+  color: var(--text-primary);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -231,7 +239,7 @@ html, body {
   top: 50%;
   transform: translateY(-50%);
   background: rgba(0,0,0,0.35);
-  color: #fff;
+  color: var(--text-primary);
   border: none;
   border-radius: 50%;
   width: 44px;
@@ -264,7 +272,7 @@ html, body {
   flex: 1;
   background: none;
   border: none;
-  color: rgba(255,255,255,0.4);
+  color: var(--text-tertiary);
   font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.5px;
@@ -281,39 +289,39 @@ html, body {
 }
 
 .mode-tab:not(:last-child) { border-right: 1px solid #1a1a1a; }
-.mode-tab.active { color: #fff; background: #111; }
-.lock-icon { font-size: 10px; opacity: 0.7; }
+.mode-tab.active { color: var(--text-primary); background: #111; }
+.lock-icon { font-size: 10px; color: var(--text-tertiary); }
 
 /* ─── SEO Section ───────────────────────────────────────────────────────────── */
 #seo-section {
   padding: 48px 24px 64px;
   max-width: 640px;
   margin: 0 auto;
-  color: #aaa;
+  color: var(--text-secondary);
 }
 
 #seo-section h2 {
   font-size: 22px;
   font-weight: 400;
-  color: #ddd;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
 #seo-section h3 {
   font-size: 16px;
   font-weight: 400;
-  color: #bbb;
+  color: var(--text-secondary);
   margin: 24px 0 10px;
 }
 
 #seo-section p {
   font-size: 14px;
   line-height: 1.7;
-  color: #aaa;
+  color: var(--text-secondary);
   margin-bottom: 12px;
 }
 
-#seo-section strong { color: #ccc; }
+#seo-section strong { color: var(--text-primary); }
 
 .seo-tags {
   display: none !important;
@@ -355,14 +363,14 @@ html, body {
   top: 12px; right: 14px;
   background: none;
   border: none;
-  color: #555;
+  color: var(--text-tertiary);
   font-size: 18px;
   cursor: pointer;
   padding: 4px 8px;
   line-height: 1;
 }
 
-.modal-close:hover { color: #fff; }
+.modal-close:hover { color: var(--text-primary); }
 
 .modal-title {
   font-size: 22px;
@@ -372,7 +380,7 @@ html, body {
 
 .modal-subtitle {
   font-size: 13px;
-  color: #666;
+  color: var(--text-tertiary);
   margin-bottom: 28px;
   line-height: 1.5;
 }
@@ -398,7 +406,7 @@ html, body {
 .btn-unlock:active { opacity: 0.8; }
 
 .btn-unlock-animals {
-  background: #fff;
+  background: var(--text-primary);
   color: #000;
 }
 
@@ -412,7 +420,7 @@ html, body {
 
 .unlock-desc {
   font-size: 11px;
-  opacity: 0.65;
+  color: var(--text-tertiary);
   line-height: 1.3;
 }
 
@@ -442,7 +450,7 @@ html, body {
 
 #ad-mode-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-tertiary);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -475,7 +483,7 @@ html, body {
 
 .ring-fill {
   fill: none;
-  stroke: #fff;
+  stroke: var(--text-primary);
   stroke-width: 6;
   stroke-linecap: round;
   stroke-dasharray: 213.6;
@@ -488,13 +496,13 @@ html, body {
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-size: 28px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
-.ad-hint { font-size: 13px; color: #555; }
+.ad-hint { font-size: 13px; color: var(--text-tertiary); }
 
 .btn-continue {
-  background: #fff;
+  background: var(--text-primary);
   color: #000;
   border: none;
   border-radius: 50px;
@@ -529,8 +537,8 @@ html, body {
   flex-wrap: wrap;
 }
 
-.cookie-content p { font-size: 12px; color: #888; line-height: 1.4; }
-.cookie-content a { color: #aaa; text-underline-offset: 2px; }
+.cookie-content p { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.cookie-content a { color: var(--text-secondary); text-underline-offset: 2px; }
 
 .cookie-buttons { display: flex; gap: 8px; flex-shrink: 0; }
 
@@ -544,8 +552,8 @@ html, body {
   transition: opacity 0.15s;
 }
 
-.btn-cookie-decline { background: none; color: #666; }
-.btn-cookie-accept  { background: #fff; color: #000; border-color: #fff; }
+.btn-cookie-decline { background: none; color: var(--text-tertiary); }
+.btn-cookie-accept  { background: var(--text-primary); color: #000; border-color: var(--text-primary); }
 .btn-cookie:active  { opacity: 0.8; }
 
 /* ─── A2HS Banner ───────────────────────────────────────────────────────────── */
@@ -572,7 +580,7 @@ html, body {
 
 #a2hs-text {
   font-size: 12px;
-  color: #888;
+  color: var(--text-secondary);
   line-height: 1.4;
   flex: 1;
 }
@@ -589,8 +597,8 @@ html, body {
   transition: opacity 0.15s;
 }
 
-.btn-a2hs-dismiss { background: none; color: #666; }
-.btn-a2hs-install { background: #fff; color: #000; border-color: #fff; }
+.btn-a2hs-dismiss { background: none; color: var(--text-tertiary); }
+.btn-a2hs-install { background: var(--text-primary); color: #000; border-color: var(--text-primary); }
 .btn-a2hs:active  { opacity: 0.8; }
 
 /* ─── Tap to Play Overlay ───────────────────────────────────────────────────── */
@@ -610,13 +618,13 @@ html, body {
 #tap-icon {
   width: 72px;
   height: 72px;
-  background: rgba(255,255,255,0.15);
+  background: var(--text-ghost);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  color: #fff;
+  color: var(--text-primary);
   padding-left: 4px;
 }
 
@@ -640,7 +648,7 @@ html, body {
   justify-content: center;
   gap: 4px;
   text-decoration: none;
-  color: #444;
+  color: var(--text-secondary);
   font-family: Georgia, serif;
   font-size: 11px;
   letter-spacing: 0.5px;
@@ -648,7 +656,7 @@ html, body {
 }
 
 .nav-item:not(:last-child) { border-right: 1px solid #1a1a1a; }
-.nav-item.active { color: #fff; }
+.nav-item.active { color: var(--text-primary); }
 
 .nav-icon  { display: flex; align-items: center; justify-content: center; line-height: 1; }
 .nav-label { font-size: 10px; letter-spacing: 0.5px; }
@@ -679,8 +687,6 @@ html, body {
   #player-area {
     width: 100%;
     max-width: 400px;
-    /* Switch from height calc to aspect-ratio so height is self-contained
-       and doesn't rely on percentage inheritance through flex children. */
     height: auto;
     aspect-ratio: 9 / 16;
     max-height: calc(100svh - 110px);

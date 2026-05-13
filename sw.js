@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yawn-v9';
+const CACHE_NAME = 'yawn-v11';
 
 // App shell — cached on install
 const SHELL_ASSETS = [
@@ -9,6 +9,10 @@ const SHELL_ASSETS = [
   './manifest.json',
   './favicon.ico',
   './rhythm.html',
+  './dream.html',
+  './dream-reading.html',
+  './dream-diary.html',
+  './dream-db.js',
 ];
 
 // ─── Install: cache app shell ─────────────────────────────────────────────────
