@@ -655,25 +655,29 @@ ambientAudio.src    = 'audio/ambient.mp3';
 ambientAudio.loop   = true;
 ambientAudio.volume = 0.35;
 
-let ambientEnabled = false;
+let ambientEnabled = true;
+
+const AUDIO_SVG_ON  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+const AUDIO_SVG_OFF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+
+function updateAudioBtn() {
+  document.getElementById('btn-audio').innerHTML = ambientEnabled ? AUDIO_SVG_ON : AUDIO_SVG_OFF;
+}
 
 function toggleAmbient() {
   ambientEnabled = !ambientEnabled;
-  const btn = document.getElementById('btn-audio');
 
   if (ambientEnabled) {
     ambientAudio.play().catch(() => {
-      // Autoplay blocked — will retry on next user interaction
       ambientEnabled = false;
-      btn.textContent = '🎵';
+      updateAudioBtn();
     });
-    btn.textContent = '🔈';
     fadeAudio(ambientAudio, 0, 0.35, 800);
   } else {
     fadeAudio(ambientAudio, ambientAudio.volume, 0, 600, () => ambientAudio.pause());
-    btn.textContent = '🎵';
   }
 
+  updateAudioBtn();
   localStorage.setItem('yawn_ambient', ambientEnabled);
 }
 
@@ -697,9 +701,9 @@ function fadeAudio(audio, from, to, duration, onComplete) {
 
 function initAmbientAudio() {
   const saved = localStorage.getItem('yawn_ambient');
-  // Default off — user must opt in
-  ambientEnabled = false;
-  document.getElementById('btn-audio').textContent = '🎵';
+  // Default on — respect explicit opt-out if stored
+  ambientEnabled = saved === 'false' ? false : true;
+  updateAudioBtn();
 }
 
 // ─── Events ───────────────────────────────────────────────────────────────────
@@ -710,6 +714,14 @@ function bindEvents() {
     applyTranslations(state.language);
     showPlayer();
     initCookieConsent();
+    // Start ambient audio automatically — user gesture from this tap allows it
+    if (ambientEnabled) {
+      ambientAudio.play().catch(() => {
+        ambientEnabled = false;
+        updateAudioBtn();
+      });
+      fadeAudio(ambientAudio, 0, 0.35, 800);
+    }
   });
 
   document.getElementById('why-toggle').addEventListener('click', () => {

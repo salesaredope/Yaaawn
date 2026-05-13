@@ -139,6 +139,26 @@
       50%       { opacity: 0; }
     }
 
+    /* Buffering pulse — before first token arrives */
+    @keyframes breathe {
+      0%, 100% { opacity: 0.35; }
+      50%       { opacity: 0.65; }
+    }
+
+    .author-card.buffering {
+      animation: breathe 1.8s ease-in-out infinite;
+    }
+
+    /* Staggered reveal for cached interpretations */
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .author-card.revealed {
+      animation: cardReveal 500ms ease forwards;
+    }
+
     /* ─── Error state ────────────────────────────────────────────────────────── */
     #error-msg {
       margin: 32px 28px 0;
@@ -319,12 +339,13 @@ async function streamAuthor(dream, author) {
   const textEl  = document.getElementById(`text-${author}`);
   const cfg     = AUTHOR_CONFIG[author];
 
-  // Unlock and start streaming cursor
+  // Unlock card, start buffering pulse while fetch is in flight
   card.classList.remove('locked');
-  textEl.classList.add('streaming');
+  card.classList.add('buffering');
   setProgress(cfg.start);
 
   let fullText = '';
+  let firstToken = false;
 
   try {
     const response = await fetch(`${WORKER_URL}/interpret`, {
@@ -352,6 +373,11 @@ async function streamAuthor(dream, author) {
         try {
           const parsed = JSON.parse(data);
           if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+            if (!firstToken) {
+              firstToken = true;
+              card.classList.remove('buffering');
+              textEl.classList.add('streaming');
+            }
             fullText += parsed.delta.text;
             textEl.textContent = fullText;
             const words = fullText.split(/\s+/).length;
@@ -362,6 +388,7 @@ async function streamAuthor(dream, author) {
       }
     }
 
+    card.classList.remove('buffering');
     textEl.classList.remove('streaming');
     setProgress(cfg.end);
 
@@ -394,14 +421,18 @@ async function init() {
   document.getElementById('dream-preview').textContent = dream.body;
   sessionStorage.removeItem('dream_draft');
 
-  // If all four already interpreted, render immediately
+  // If all four already interpreted, staggered reveal
   const allDone = SEQUENCE.every(a => dream.interpretations?.[a]?.text);
   if (allDone) {
-    SEQUENCE.forEach(a => {
+    SEQUENCE.forEach((a, i) => {
+      const card = document.getElementById(`card-${a}`);
       document.getElementById(`text-${a}`).textContent = dream.interpretations[a].text;
-      unlockCard(a);
+      card.classList.remove('locked');
+      card.style.animationDelay = `${i * 550}ms`;
+      card.classList.add('revealed');
     });
     setProgress(100);
+    await delay(SEQUENCE.length * 550 + 300);
     showActions();
     return;
   }
@@ -411,8 +442,11 @@ async function init() {
   for (let i = 0; i < SEQUENCE.length; i++) {
     const a = SEQUENCE[i];
     if (dream.interpretations?.[a]?.text) {
+      const card = document.getElementById(`card-${a}`);
       document.getElementById(`text-${a}`).textContent = dream.interpretations[a].text;
-      unlockCard(a);
+      card.classList.remove('locked');
+      card.style.animationDelay = `${i * 550}ms`;
+      card.classList.add('revealed');
       startFrom = i + 1;
     } else {
       break;
